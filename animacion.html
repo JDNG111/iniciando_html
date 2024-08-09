@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animación 2D con anime.js</title>
+<link rel="stylesheet" href="estilos.css">
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+</head>
+<body>
+
+<div id="miAnimacion"></div>
+
+<script>
+  // Crear la animación usando anime.js
+  anime({
+    targets: '#miAnimacion',
+    translateX: 250,
+    rotate: '1turn',
+    backgroundColor: '#FFF',
+    duration: 2000,
+    loop: true
+  });
+</script>
+
+</body>
+</html>
