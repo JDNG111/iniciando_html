@@ -1,29 +1,74 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Animación 2D con anime.js</title>
-<link rel="stylesheet" href="estilos.css">
-<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<title>Icosahedron with Starry Background</title>
+<style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 </head>
 <body>
-
-  <h1>HOLA MUNDO</h1>
-
-<div id="miAnimacion"></div>
-
 <script>
-  // Crear la animación usando anime.js
-  anime({
-    targets: '#miAnimacion',
-    translateX: 250,
-    rotate: '1turn',
-    backgroundColor: '#FFF',
-    duration: 2000,
-    loop: true
-  });
+        // Create scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+ 
+        // Create starry background
+        const starGeometry = new THREE.BufferGeometry();
+        const starCount = 10000;
+        const positions = new Float32Array(starCount * 3);
+ 
+        for (let i = 0; i < starCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 1000;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 1000;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 1000;
+        }
+ 
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+ 
+        // Create icosahedron
+        const geometry = new THREE.IcosahedronGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0xffff00, wireframe: true });
+        const icosahedron = new THREE.Mesh(geometry, material);
+        scene.add(icosahedron);
+ 
+        camera.position.z = 5;
+ 
+        // Animate icosahedron with GSAP
+        gsap.to(icosahedron.rotation, {
+            x: Math.PI * 2,
+            y: Math.PI * 2,
+            duration: 10,
+            repeat: -1,
+            ease: 'none'
+        });
+ 
+        // Render function
+        function animate() {
+            requestAnimationFrame(animate);
+            stars.rotation.x += 0.0005; // Rotate stars to give a slight movement effect
+            stars.rotation.y += 0.0005;
+            renderer.render(scene, camera);
+        }
+ 
+        animate();
+ 
+        // Resize event
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 </script>
-
 </body>
 </html>
